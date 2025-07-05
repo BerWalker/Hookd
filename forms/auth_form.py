@@ -7,11 +7,13 @@ from models.user import User
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[
         DataRequired(message='Email is required.'),
-        Email(message='Please enter a valid email address.')
+        Email(message='Please enter a valid email address.'),
+        Length(max=128)
     ], render_kw={'placeholder': 'Enter your email'})
     
     password = PasswordField('Password', validators=[
-        DataRequired(message='Password is required.')
+        DataRequired(message='Password is required.'),
+        Length(max=71)
     ], render_kw={'placeholder': 'Enter your password'})
     
     remember_me = BooleanField('Remember Me')
@@ -25,16 +27,18 @@ class RegisterForm(FlaskForm):
     
     email = StringField('Email', validators=[
         DataRequired(message='Email is required.'),
-        Email(message='Please enter a valid email address.')
+        Email(message='Please enter a valid email address.'),
+        Length(min=4, max=128, message='Email must be between 4 and 128 characters.')
     ], render_kw={'placeholder': 'Enter your email'})
     
     password = PasswordField('Password', validators=[
         DataRequired(message='Password is required.'),
-        Length(min=12, message='Password must be at least 8 characters long.')
+        Length(min=12, max=71, message='Password must be at least 12 characters long.')
     ], render_kw={'placeholder': 'Create a password'})
     
     confirm_password = PasswordField('Confirm Password', validators=[
         DataRequired(message='Please confirm your password.'),
+        Length(max=71),
         EqualTo('password', message='Passwords must match.')
     ], render_kw={'placeholder': 'Confirm your password'})
     
