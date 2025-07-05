@@ -53,3 +53,26 @@ class RegisterForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already registered. Please use a different email or log in.')
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[
+        DataRequired(message='Email is required.'),
+        Email(message='Please enter a valid email address.'),
+        Length(max=128)
+    ], render_kw={'placeholder': 'Enter your email address'})
+    
+    submit = SubmitField('Send Reset Link')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New Password', validators=[
+        DataRequired(message='Password is required.'),
+        Length(min=12, max=71, message='Password must be at least 12 characters long.')
+    ], render_kw={'placeholder': 'Enter your new password'})
+    
+    confirm_password = PasswordField('Confirm New Password', validators=[
+        DataRequired(message='Please confirm your password.'),
+        Length(max=71),
+        EqualTo('password', message='Passwords must match.')
+    ], render_kw={'placeholder': 'Confirm your new password'})
+    
+    submit = SubmitField('Reset Password')
