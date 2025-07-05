@@ -5,7 +5,7 @@ load_dotenv()
 
 from flask import Flask
 from config import Config
-from extensions import db, login_manager, bcrypt
+from extensions import db, login_manager, bcrypt, mail
 
 
 def create_app():
@@ -16,6 +16,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    mail.init_app(app)
     
     # Configure login manager
     login_manager.login_view = 'auth.login'
