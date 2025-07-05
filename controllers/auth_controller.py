@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from models.user import User
 from services.auth_service import AuthService
-from forms.auth_forms import LoginForm, RegisterForm
+from forms.auth_form import LoginForm, RegisterForm
 from extensions import db
 
 auth_bp = Blueprint('auth', __name__)
