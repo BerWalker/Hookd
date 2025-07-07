@@ -1,49 +1,59 @@
-# PhishingTool
+# Hookd
 
 A cybersecurity phishing platform built with Flask.
 
 ## Features
 
 - User authentication (login/register)
-- **Forgot Password functionality** - Secure password reset via email
+- **Forgot Password functionality** — Secure password reset via email
 - Dashboard interface
 - Modern, responsive UI with Tailwind CSS
 
-## Installation
+## Quick Start
+
+> **Requirements:**
+> - [Docker](https://www.docker.com/get-started)
+> - [Docker Compose](https://docs.docker.com/compose/)
 
 1. Clone the repository
-2. Install dependencies:
+2. Copy the example environment file:
    ```bash
-   pip install -r requirements.txt
+   cp env.example .env
    ```
-
-3. Set up environment variables in a `.env` file:
-   ```env
-   FLASK_SECRET_KEY=your-secret-key-here
-   DATABASE_URL=sqlite:///instance/phishing_tool.db
-   
-   # Email configuration for password reset
-   MAIL_SERVER=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USE_TLS=true
-   MAIL_USERNAME=your-email@gmail.com
-   MAIL_PASSWORD=your-app-password
-   MAIL_DEFAULT_SENDER=your-email@gmail.com
-   ```
-
-4. Run the database migration (if upgrading from an older version):
+3. Edit the `.env` file to set your secrets and email credentials
+4. Start the application:
    ```bash
-   python migrate_db.py
+   docker compose up --build --no-deps --force-recreate
    ```
+5. Access Hookd at [http://localhost:5000](http://localhost:5000) (or as configured)
 
-5. Start the application:
-   ```bash
-   python app.py
-   ```
+> **Note:** You do **not** need to manually install Python requirements or run any migration scripts. All dependencies and setup are handled automatically by Docker.
 
-## Email Configuration
+## Environment Configuration
 
-The forgot password feature requires email configuration to send password reset links. Here's how to set it up:
+Copy the example environment file to `.env`:
+
+```bash
+cp env.example .env
+```
+
+Then edit `.env` to set your secrets and email credentials. The following variables are required:
+
+```env
+FLASK_SECRET_KEY="secret-key-123456789"
+
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USE_SSL=true
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_DEFAULT_SENDER=your-email@gmail.com
+
+DB_NAME=hookd
+DB_USER=hookd_user
+DB_PASSWORD=hookd_password
+```
 
 ### Gmail Setup
 1. Enable 2-factor authentication on your Gmail account
@@ -58,41 +68,33 @@ You can use any SMTP provider. Update the `MAIL_SERVER`, `MAIL_PORT`, and other 
 
 ## Forgot Password Feature
 
-The forgot password functionality includes:
-
-1. **Forgot Password Page** (`/auth/forgot-password`)
-   - Users enter their email address
-   - System sends a secure reset link via email
-
-2. **Password Reset Page** (`/auth/reset-password/<token>`)
-   - Users set a new password using the reset token
-   - Tokens expire after 1 hour for security
-
-3. **Security Features**
-   - Secure token generation using `secrets` module
-   - Token expiration after 1 hour
-   - Tokens are cleared after use
-   - Email validation and error handling
+- **Forgot Password Page** (`/auth/forgot-password`): Users enter their email address to receive a secure reset link
+- **Password Reset Page** (`/auth/reset-password/<token>`): Users set a new password using the reset token (expires after 1 hour)
+- **Security:** Secure token generation, expiration, and validation
 
 ## Project Structure
 
 ```
-PhishingTool/
+Hookd/
 ├── app.py                 # Main application file
-├── config.py             # Configuration settings
-├── extensions.py         # Flask extensions
-├── migrate_db.py         # Database migration script
-├── requirements.txt      # Python dependencies
-├── controllers/          # Route controllers
+├── config.py              # Configuration settings
+├── extensions.py          # Flask extensions
+├── requirements.txt       # Python dependencies
+├── docker-compose.yml     # Docker Compose 
+├── Dockerfile             # Docker container 
+├── .dockerignore          # Docker ignore file
+├── .gitignore             # Git ignore file
+├── controllers/           # Route controllers
 │   ├── auth_controller.py
+│   ├── health_controller.py
 │   └── main_controller.py
-├── forms/               # WTForms
+├── forms/                 # WTForms
 │   └── auth_form.py
-├── models/              # Database models
+├── models/                # Database models
 │   └── user.py
-├── services/            # Business logic
+├── services/              # Business logic
 │   └── auth_service.py
-├── templates/           # HTML templates
+├── templates/             # HTML templates
 │   ├── auth/
 │   │   ├── login.html
 │   │   ├── register.html
@@ -101,9 +103,14 @@ PhishingTool/
 │   ├── main/
 │   │   └── dashboard.html
 │   └── base.html
-├── static/              # Static files
-└── utils/               # Utility functions
-    └── security.py
+├── static/                # Static files
+│   ├── favicon.ico
+│   ├── logo_full.png
+│   ├── logo_shortcut.png
+│   └── logo_symbol.png
+├── utils/                 # Utility functions
+│   ├── __init__.py
+│   └── security.py
 ```
 
 ## Usage
