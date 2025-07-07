@@ -9,7 +9,6 @@ class Config:
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
     REMEMBER_COOKIE_DURATION = timedelta(days=7)
     
-    # Email configuration for password reset
     MAIL_SERVER   = os.getenv("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT     = int(os.getenv("MAIL_PORT"))
     MAIL_USE_TLS  = os.getenv("MAIL_USE_TLS", "true").lower() == "true"

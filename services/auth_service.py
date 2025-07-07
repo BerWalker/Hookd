@@ -8,14 +8,12 @@ from flask_mail import Message
 class AuthService:
     @staticmethod
     def create_user(username, email, password):
-        # Check if user already exists
         if User.query.filter_by(email=email).first():
             raise ValueError('Email address already registered.')
         
         if User.query.filter_by(username=username).first():
             raise ValueError('Username already taken.')
         
-        # Create new user
         password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
         
         user = User(
@@ -43,7 +41,6 @@ class AuthService:
     
     @staticmethod
     def send_password_reset_email(user):
-        # Check if email configuration is properly set up
         if not current_app.config.get('MAIL_SERVER') or not current_app.config.get('MAIL_USERNAME'):
             current_app.logger.error("Email configuration is missing. Please check MAIL_SERVER and MAIL_USERNAME settings.")
             return False
@@ -74,13 +71,11 @@ Hookd Team'''
             return True
         except Exception as e:
             current_app.logger.error(f"Failed to send email to {user.email}: {str(e)}")
-            # Rollback the token generation if email fails
             db.session.rollback()
             return False
     
     @staticmethod
     def verify_reset_token(token):
-        """Verify reset token and return user if valid"""
         user = User.query.filter_by(reset_token=token).first()
         if user and user.reset_token_expires and user.reset_token_expires > datetime.utcnow():
             return user
@@ -88,7 +83,6 @@ Hookd Team'''
     
     @staticmethod
     def reset_password(token, new_password):
-        """Reset user password using token"""
         user = AuthService.verify_reset_token(token)
         if user:
             user.password_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')

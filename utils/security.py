@@ -1,3 +1,4 @@
+# utils/security.py
 from flask import redirect, request
 from urllib.parse import urlparse
 
@@ -8,7 +9,6 @@ def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(target)
     
-    # Only allow internal redirects (same host)
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 def safe_redirect(target, fallback):
